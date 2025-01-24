@@ -13,6 +13,8 @@ import java.util.*;
 public class RecyclingController {
 
     private final RecyclingRepository recyclingRepository;
+    private final ResponseEntity<String> serverError = new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+    private final ResponseEntity<String> tipError = new ResponseEntity<>("Tip not found", HttpStatus.NOT_FOUND);
 
     public RecyclingController(RecyclingRepository recyclingRepository) {
         this.recyclingRepository = recyclingRepository;
@@ -27,7 +29,7 @@ public class RecyclingController {
             }
             return new ResponseEntity<>(tips, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -38,10 +40,10 @@ public class RecyclingController {
             if (tip.isPresent()) {
                 return new ResponseEntity<>(tip.get(), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Tip not found", HttpStatus.NOT_FOUND);
+                return tipError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -54,7 +56,7 @@ public class RecyclingController {
             RecyclingTip newTip = recyclingRepository.save(tip);
             return new ResponseEntity<>(newTip, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -67,10 +69,10 @@ public class RecyclingController {
                 RecyclingTip updatedTip = recyclingRepository.save(tip);
                 return new ResponseEntity<>(updatedTip, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Tip not found", HttpStatus.NOT_FOUND);
+                return tipError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -82,10 +84,10 @@ public class RecyclingController {
                 recyclingRepository.deleteById(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>("Tip not found", HttpStatus.NOT_FOUND);
+                return tipError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 }

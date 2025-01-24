@@ -13,6 +13,8 @@ import java.util.*;
 public class WasteController {
 
     private final WasteRepository wasteRepository;
+    private final ResponseEntity<String> serverError = new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+    private final ResponseEntity<String> categoryError = new ResponseEntity<>("Waste category not found", HttpStatus.NOT_FOUND);
 
     public WasteController(WasteRepository wasteRepository) {
         this.wasteRepository = wasteRepository;
@@ -27,7 +29,7 @@ public class WasteController {
             }
             return new ResponseEntity<>(categories, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -38,10 +40,10 @@ public class WasteController {
             if (wasteCategory.isPresent()) {
                 return new ResponseEntity<>(wasteCategory.get(), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Waste category not found", HttpStatus.NOT_FOUND);
+                return categoryError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -54,7 +56,7 @@ public class WasteController {
             WasteCategory createdCategory = wasteRepository.save(wasteCategory);
             return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -67,10 +69,10 @@ public class WasteController {
                 WasteCategory updatedCategory = wasteRepository.save(wasteCategory);
                 return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Waste category not found", HttpStatus.NOT_FOUND);
+                return categoryError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -82,10 +84,10 @@ public class WasteController {
                 wasteRepository.deleteById(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>("Waste category not found", HttpStatus.NOT_FOUND);
+                return categoryError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 }

@@ -14,6 +14,8 @@ import java.util.*;
 @RequestMapping("/api/disposalguidelines")
 public class GuidelineController {
     private final GuidelineRepository guidelineRepository;
+    private final ResponseEntity<String> serverError = new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+    private final ResponseEntity<String> guidelineError = new ResponseEntity<>("Guideline not found", HttpStatus.NOT_FOUND);
 
     @Autowired
     public GuidelineController(GuidelineRepository guidelineRepository) {
@@ -29,7 +31,7 @@ public class GuidelineController {
             }
             return new ResponseEntity<>(guidelines, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -40,10 +42,10 @@ public class GuidelineController {
             if (guideline.isPresent()) {
                 return new ResponseEntity<>(guideline.get(), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Guideline not found", HttpStatus.NOT_FOUND);
+                return guidelineError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -53,7 +55,7 @@ public class GuidelineController {
             Guideline createdGuideline = guidelineRepository.save(guideline);
             return new ResponseEntity<>(createdGuideline, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -66,10 +68,10 @@ public class GuidelineController {
                 Guideline updatedGuideline = guidelineRepository.save(guideline);
                 return new ResponseEntity<>(updatedGuideline, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Guideline not found", HttpStatus.NOT_FOUND);
+                return guidelineError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 
@@ -81,10 +83,10 @@ public class GuidelineController {
                 guidelineRepository.deleteById(id);
                 return new ResponseEntity<>("Guideline deleted", HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Guideline not found", HttpStatus.NOT_FOUND);
+                return guidelineError;
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return serverError;
         }
     }
 }
